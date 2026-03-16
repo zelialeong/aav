@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentor Matching Platform — Accelerating Asia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0e0c;
+    --ink2: #3a3830;
+    --ink3: #7a7670;
+    --paper: #f7f4ef;
+    --paper2: #efebe3;
+    --paper3: #e5e0d6;
+    --accent: #c8502a;
+    --accent2: #e8a87c;
+    --green: #2d6a4f;
+    --green-light: #d8f3e8;
+    --red-light: #fce8e3;
+    --amber-light: #fdf3e3;
+    --border: rgba(15,14,12,0.1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Instrument Serif', serif;
+    font-size: 18px; letter-spacing: -0.01em;
+    color: var(--ink);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    font-size: 13px; font-weight: 400; color: var(--ink3);
+    text-decoration: none; letter-spacing: 0.02em;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-pill {
+    font-size: 12px; font-weight: 500;
+    background: var(--ink); color: var(--paper);
+    padding: 7px 16px; border-radius: 20px; text-decoration: none;
+    transition: background .2s;
+  }
+  .nav-pill:hover { background: var(--accent); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 800px 600px at 80% 40%, rgba(200,80,42,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 600px 500px at 20% 70%, rgba(45,106,79,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-label {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 24px;
+    opacity: 0; animation: fadeUp .6s .1s forwards;
+  }
+  .hero-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(48px, 7vw, 88px);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    max-width: 800px;
+    margin-bottom: 32px;
+    opacity: 0; animation: fadeUp .7s .2s forwards;
+  }
+  .hero-title em { font-style: italic; color: var(--accent); }
+  .hero-sub {
+    font-size: 17px; font-weight: 300; color: var(--ink2);
+    max-width: 520px; line-height: 1.7;
+    margin-bottom: 48px;
+    opacity: 0; animation: fadeUp .7s .35s forwards;
+  }
+  .hero-stats {
+    display: flex; gap: 48px; align-items: flex-start;
+    opacity: 0; animation: fadeUp .7s .5s forwards;
+  }
+  .hero-stat-num {
+    font-family: 'Instrument Serif', serif;
+    font-size: 42px; line-height: 1; color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .hero-stat-label {
+    font-size: 12px; color: var(--ink3); margin-top: 4px;
+    max-width: 120px; line-height: 1.4;
+  }
+  .hero-divider { width: 1px; height: 48px; background: var(--border); align-self: center; }
+  .scroll-hint {
+    position: absolute; bottom: 40px; left: 48px;
+    font-size: 12px; color: var(--ink3); letter-spacing: 0.05em;
+    display: flex; align-items: center; gap: 8px;
+    opacity: 0; animation: fadeUp .7s .8s forwards;
+  }
+  .scroll-hint::before {
+    content: ''; display: block;
+    width: 24px; height: 1px; background: var(--ink3);
+  }
+
+  /* SECTION WRAPPER */
+  section { padding: 100px 48px; }
+  .section-label {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after {
+    content: ''; flex: 0 0 40px; height: 1px; background: var(--accent); opacity: .4;
+  }
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.1; letter-spacing: -0.02em;
+    color: var(--ink); margin-bottom: 16px;
+  }
+  .section-sub {
+    font-size: 16px; font-weight: 300; color: var(--ink2);
+    max-width: 560px; line-height: 1.7; margin-bottom: 56px;
+  }
+
+  /* PROBLEM SECTION */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+  .problem-cell {
+    background: var(--paper);
+    padding: 36px 32px;
+    transition: background .2s;
+  }
+  .problem-cell:hover { background: var(--paper2); }
+  .problem-cell.full { grid-column: 1 / -1; }
+  .problem-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px; font-size: 16px;
+  }
+  .problem-icon.red { background: var(--red-light); }
+  .problem-icon.amber { background: var(--amber-light); }
+  .problem-icon.green { background: var(--green-light); }
+  .problem-cell h3 {
+    font-size: 15px; font-weight: 500; margin-bottom: 8px; color: var(--ink);
+  }
+  .problem-cell p {
+    font-size: 14px; color: var(--ink3); line-height: 1.6;
+  }
+  .quote-block {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 16px;
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .quote-block::before {
+    content: '\201C';
+    position: absolute; top: -20px; left: 32px;
+    font-family: 'Instrument Serif', serif;
+    font-size: 200px; color: rgba(255,255,255,0.05);
+    line-height: 1; pointer-events: none;
+  }
+  .quote-text {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(18px, 2.5vw, 26px);
+    line-height: 1.5; font-style: italic;
+    color: var(--paper); max-width: 760px;
+    position: relative; z-index: 1;
+  }
+  .quote-text em { color: var(--accent2); font-style: normal; }
+  .quote-attr {
+    margin-top: 24px; font-size: 13px; color: rgba(247,244,239,0.5);
+    position: relative; z-index: 1;
+  }
+
+  /* DATA BAR */
+  .data-strip {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+    margin-bottom: 56px;
+  }
+  .data-cell {
+    background: var(--paper); padding: 28px 24px;
+  }
+  .data-pct {
+    font-family: 'Instrument Serif', serif;
+    font-size: 40px; line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .data-pct.bad { color: var(--accent); }
+  .data-pct.ok { color: #ba7517; }
+  .data-pct.good { color: var(--green); }
+  .data-field { font-size: 13px; color: var(--ink3); margin-top: 6px; }
+
+  /* MATCHING INTERFACE */
+  .interface-wrap {
+    display: grid; grid-template-columns: 1fr 1.1fr;
+    gap: 24px; align-items: start;
+  }
+  .form-card {
+    background: var(--paper2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .form-card h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px; margin-bottom: 24px; color: var(--ink);
+  }
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink3);
+    display: block; margin-bottom: 6px;
+  }
+  textarea, select {
+    width: 100%; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 14px;
+    outline: none; resize: vertical;
+    transition: border-color .2s;
+  }
+  textarea:focus, select:focus { border-color: var(--ink2); }
+  textarea { min-height: 72px; line-height: 1.5; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .match-btn {
+    width: 100%; padding: 13px;
+    background: var(--ink); color: var(--paper);
+    border: none; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 500; cursor: pointer;
+    margin-top: 8px; transition: background .2s;
+  }
+  .match-btn:hover { background: var(--accent); }
+
+  .results-panel { display: flex; flex-direction: column; gap: 14px; }
+  .mentor-card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    transition: all .2s; cursor: pointer;
+    position: relative; overflow: hidden;
+  }
+  .mentor-card:hover { border-color: rgba(15,14,12,0.25); transform: translateY(-1px); }
+  .mentor-card.best {
+    border-color: var(--accent);
+    background: var(--paper);
+  }
+  .best-badge {
+    position: absolute; top: 0; right: 20px;
+    background: var(--accent); color: #fff;
+    font-size: 10px; font-weight: 500; letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 4px 10px; border-radius: 0 0 8px 8px;
+  }
+  .mentor-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 500; flex-shrink: 0;
+  }
+  .av-a { background: #dbeafe; color: #1e40af; }
+  .av-b { background: var(--green-light); color: var(--green); }
+  .av-c { background: var(--amber-light); color: #92400e; }
+  .mentor-name { font-size: 15px; font-weight: 500; color: var(--ink); }
+  .mentor-role { font-size: 12px; color: var(--ink3); margin-top: 1px; }
+  .match-score {
+    margin-left: auto;
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px; line-height: 1;
+  }
+  .score-a { color: var(--accent); }
+  .score-b { color: var(--ink2); }
+  .score-c { color: var(--ink3); }
+  .mentor-reason {
+    font-size: 13px; color: var(--ink2); line-height: 1.55;
+    margin-bottom: 12px;
+    padding-left: 52px;
+  }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; padding-left: 52px; }
+  .tag {
+    font-size: 11px; padding: 3px 10px;
+    border-radius: 20px; border: 1px solid var(--border);
+    color: var(--ink3); background: var(--paper2);
+  }
+  .tag.hi {
+    background: rgba(200,80,42,0.08);
+    border-color: rgba(200,80,42,0.2);
+    color: var(--accent);
+  }
+  .mentor-foot {
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--ink3);
+    display: flex; gap: 16px; padding-left: 52px;
+  }
+
+  /* GAP DASHBOARD */
+  .gap-section { background: var(--paper2); border-radius: 20px; padding: 48px; }
+  .gap-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
+  .gap-col h4 {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink3);
+    margin-bottom: 20px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .gap-row { margin-bottom: 12px; }
+  .gap-meta { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .gap-name { font-size: 13px; color: var(--ink2); }
+  .gap-num { font-size: 12px; font-weight: 500; }
+  .gap-track {
+    height: 5px; background: var(--paper3);
+    border-radius: 3px; overflow: hidden;
+  }
+  .gap-fill { height: 100%; border-radius: 3px; transition: width 1s cubic-bezier(.22,1,.36,1); }
+  .fill-green { background: var(--green); }
+  .fill-amber { background: #d97706; }
+  .fill-red { background: var(--accent); }
+  .gap-num.good { color: var(--green); }
+  .gap-num.warn { color: #d97706; }
+  .gap-num.bad { color: var(--accent); }
+
+  .recruit-box {
+    margin-top: 32px;
+    background: var(--ink);
+    border-radius: 14px;
+    padding: 28px 32px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .recruit-item { }
+  .recruit-num {
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px; color: var(--accent2);
+    line-height: 1; margin-bottom: 6px;
+  }
+  .recruit-label { font-size: 13px; color: rgba(247,244,239,0.7); line-height: 1.5; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 48px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  footer p { font-size: 13px; color: var(--ink3); }
+  footer strong { color: var(--ink); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero, section { padding-left: 24px; padding-right: 24px; }
+    .interface-wrap { grid-template-columns: 1fr; }
+    .gap-grid { grid-template-columns: 1fr; }
+    .problem-grid { grid-template-columns: 1fr; }
+    .data-strip { grid-template-columns: 1fr 1fr; }
+    .hero-stats { flex-direction: column; gap: 24px; }
+    .hero-divider { display: none; }
+    .recruit-box { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    Accelerating Asia <span>·</span> Mentor Intelligence
+  </div>
+  <div class="nav-links">
+    <a href="#problem">The Problem</a>
+    <a href="#matching">Matching</a>
+    <a href="#gaps">Gap Analysis</a>
+  </div>
+  <a href="#matching" class="nav-pill">See the system →</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-label">Mentor Program · System Design</div>
+  <h1 class="hero-title">Matching founders to<br>the right mentor,<br><em>at scale.</em></h1>
+  <p class="hero-sub">A proposal to encode institutional knowledge into a system — so the mentor program no longer depends on any one person knowing every mentor and every founder.</p>
+  <div class="hero-stats">
+    <div>
+      <div class="hero-stat-num">58</div>
+      <div class="hero-stat-label">Active mentors in current database</div>
+    </div>
+    <div class="hero-divider"></div>
+    <div>
+      <div class="hero-stat-num">12%</div>
+      <div class="hero-stat-label">Have usable expertise data today</div>
+    </div>
+    <div class="hero-divider"></div>
+    <div>
+      <div class="hero-stat-num">3</div>
+      <div class="hero-stat-label">Layers to make matching truly scalable</div>
+    </div>
+  </div>
+  <div class="scroll-hint">Scroll to explore</div>
+</div>
+
+<!-- SECTION 1: PROBLEM -->
+<section id="problem">
+  <div class="section-label reveal">01 — The Problem</div>
+  <h2 class="section-title reveal">The program lives<br>in people's heads.</h2>
+  <p class="section-sub reveal">The best matches happen because the right person knows both the founder and the mentor. That's not a system — it's a dependency.</p>
+
+  <div class="problem-grid reveal">
+    <div class="problem-cell">
+      <div class="problem-icon red">⚠</div>
+      <h3>Single point of failure</h3>
+      <p>When the person who knows every mentor leaves or runs out of bandwidth, the program stalls. No documentation survives this.</p>
+    </div>
+    <div class="problem-cell">
+      <div class="problem-icon red">⚡</div>
+      <h3>Doesn't scale with cohort growth</h3>
+      <p>Manual matching works for 10 startups. At 25+, the mental model of 58 mentors × 25 founders becomes impossible to maintain.</p>
+    </div>
+    <div class="problem-cell">
+      <div class="problem-icon amber">⏱</div>
+      <h3>Reactive, not proactive</h3>
+      <p>Founders ask for help only when they think to. Without a clear picture of what mentors offer, many high-value intros never happen.</p>
+    </div>
+    <div class="problem-cell">
+      <div class="problem-icon amber">👁</div>
+      <h3>Mentor dark matter</h3>
+      <p>Most mentors in the database have zero structured data — no skills, no stage preference, no geography. They're invisible to anyone who wasn't there when they joined.</p>
+    </div>
+  </div>
+
+  <div class="quote-block reveal">
+    <p class="quote-text">"If you leave, the mentor program dies. If Sherwin runs out of time, <em>the mentor program dies again.</em> So there needs to be an element of self-matching — something scalable."</p>
+    <p class="quote-attr">— General Partner, Accelerating Asia</p>
+  </div>
+</section>
+
+<!-- DATABASE STATE -->
+<section style="padding-top: 0">
+  <div class="section-label reveal">Current state</div>
+  <h2 class="section-title reveal">The data we have today.</h2>
+  <p class="section-sub reveal">Across two database exports. The fields exist — but almost no one has filled them in.</p>
+
+  <div class="data-strip reveal">
+    <div class="data-cell">
+      <div class="data-pct bad">12%</div>
+      <div class="data-field">Have expertise / skills filled</div>
+    </div>
+    <div class="data-cell">
+      <div class="data-pct bad">17%</div>
+      <div class="data-field">Have answered "what to come to me for"</div>
+    </div>
+    <div class="data-cell">
+      <div class="data-pct ok">55%</div>
+      <div class="data-field">Have a LinkedIn URL on file</div>
+    </div>
+    <div class="data-cell">
+      <div class="data-pct ok">52%</div>
+      <div class="data-field">Have geography/industry data</div>
+    </div>
+  </div>
+
+  <div class="problem-grid reveal" style="margin-bottom:0">
+    <div class="problem-cell">
+      <div class="problem-icon green">✓</div>
+      <h3>What we can act on now</h3>
+      <p>LinkedIn scraping for 32 mentors with URLs. Structured data auto-fills without asking mentors anything.</p>
+    </div>
+    <div class="problem-cell">
+      <div class="problem-icon amber">↗</div>
+      <h3>What a 5-minute form unlocks</h3>
+      <p>Stage preference, mentoring style, capacity, and the "superpower sentence" — the single field that makes AI matching work.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: MATCHING INTERFACE -->
+<section id="matching" style="background: var(--paper)">
+  <div class="section-label reveal">02 — The Matching Interface</div>
+  <h2 class="section-title reveal">From founder need<br>to right mentor,<br>in seconds.</h2>
+  <p class="section-sub reveal">A staff member describes the founder's situation in plain language. The system surfaces the top matches — with reasoning, vibe fit, and capacity — so any team member can make a quality intro.</p>
+
+  <div class="interface-wrap reveal">
+    <div class="form-card">
+      <h3>Founder brief</h3>
+      <div class="form-group">
+        <label class="form-label">What does the founder need right now?</label>
+        <textarea id="founderNeed">Struggling to close first enterprise customer in Indonesia — getting meetings but deals stall at procurement</textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Stage</label>
+          <select id="stage">
+            <option>Seed (early traction)</option>
+            <option>Pre-seed</option>
+            <option>Series A+</option>
+            <option>Idea / pre-product</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Sector</label>
+          <select id="sector">
+            <option>B2B SaaS</option>
+            <option>Fintech</option>
+            <option>Healthtech</option>
+            <option>E-commerce</option>
+            <option>Edtech</option>
+            <option>Climate / sustainability</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Geography</label>
+          <select id="geo">
+            <option>Indonesia</option>
+            <option>Singapore</option>
+            <option>Vietnam</option>
+            <option>Philippines</option>
+            <option>Bangladesh</option>
+            <option>India</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">What kind of support?</label>
+          <select id="support">
+            <option>Challenge my thinking</option>
+            <option>Give me a framework</option>
+            <option>Sounding board</option>
+            <option>Open doors / intro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Founder headspace</label>
+        <select id="headspace">
+          <option>Stuck — needs clarity</option>
+          <option>Has a plan, needs sanity check</option>
+          <option>Exploring options</option>
+          <option>Needs accountability + pushing</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Directness preference</label>
+        <select id="directness">
+          <option>High — direct feedback welcome</option>
+          <option>Medium — balanced</option>
+          <option>Low — prefers coaching approach</option>
+        </select>
+      </div>
+      <button class="match-btn" onclick="findMatches()">Find mentor matches →</button>
+    </div>
+
+    <div class="results-panel" id="results">
+      <div class="mentor-card best">
+        <div class="best-badge">Best match</div>
+        <div class="mentor-top">
+          <div class="avatar av-a">BT</div>
+          <div>
+            <div class="mentor-name">Bithin Talukdar</div>
+            <div class="mentor-role">BD · Revenue Management · SEA</div>
+          </div>
+          <div class="match-score score-a">94</div>
+        </div>
+        <div class="mentor-reason">Strong fit for enterprise sales stalling — deep experience in SEA procurement cycles, has coached founders through first B2B close in Indonesia. Direct communicator.</div>
+        <div class="tag-row">
+          <span class="tag hi">B2B sales</span>
+          <span class="tag hi">Indonesia</span>
+          <span class="tag hi">Revenue management</span>
+          <span class="tag">Seed stage</span>
+          <span class="tag">Direct style</span>
+        </div>
+        <div class="mentor-foot">
+          <span>WhatsApp preferred</span>
+          <span>1–2 intros/month</span>
+          <span style="color:var(--green)">1 slot open</span>
+        </div>
+      </div>
+
+      <div class="mentor-card">
+        <div class="mentor-top">
+          <div class="avatar av-b">JS</div>
+          <div>
+            <div class="mentor-name">Jeshua Soh</div>
+            <div class="mentor-role">VC · SEA markets · Remote teams</div>
+          </div>
+          <div class="match-score score-b">78</div>
+        </div>
+        <div class="mentor-reason">VC background gives strong read on what enterprise buyers care about. Less direct Indonesia experience but exceptional SEA market instincts and connector value.</div>
+        <div class="tag-row">
+          <span class="tag hi">VC perspective</span>
+          <span class="tag hi">SEA markets</span>
+          <span class="tag">B2B</span>
+          <span class="tag">Connector style</span>
+        </div>
+        <div class="mentor-foot">
+          <span>LinkedIn preferred</span>
+          <span>3–5 intros/month</span>
+          <span style="color:var(--green)">Available</span>
+        </div>
+      </div>
+
+      <div class="mentor-card">
+        <div class="mentor-top">
+          <div class="avatar av-c">SA</div>
+          <div>
+            <div class="mentor-name">Sion Abednego</div>
+            <div class="mentor-role">Finance & management · Revenue streams</div>
+          </div>
+          <div class="match-score score-c">61</div>
+        </div>
+        <div class="mentor-reason">Strong on deal structure and pricing reframing — can help unpack whether the procurement stall is a pricing, value, or stakeholder problem.</div>
+        <div class="tag-row">
+          <span class="tag">Pricing</span>
+          <span class="tag">Revenue model</span>
+          <span class="tag">Analytical style</span>
+        </div>
+        <div class="mentor-foot">
+          <span>Email preferred</span>
+          <span>1–2 intros/month</span>
+          <span style="color:#d97706">At capacity</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: GAP DASHBOARD -->
+<section id="gaps">
+  <div class="section-label reveal">03 — Gap Analysis</div>
+  <h2 class="section-title reveal">Know exactly who<br>to go find next.</h2>
+  <p class="section-sub reveal">Once mentor data is enriched, the gaps become visible. Instead of recruiting broadly, we recruit precisely — targeting the specific skills, geographies, and stages where demand outstrips supply.</p>
+
+  <div class="gap-section reveal">
+    <div class="gap-grid">
+      <div class="gap-col">
+        <h4>By functional expertise</h4>
+
+        <div class="gap-row">
+          <div class="gap-meta"><span class="gap-name">Sales & revenue</span><span class="gap-num good">9</span></div>
+          <div class="gap-track"><div class="gap-fill fill-green" style="width:75%"></div></div>
+        </div>
+        <div class="gap-row">
+          <div class="gap-meta"><span class="gap-name">Fundraising</span><span class="gap-num good">8</span></div>
+          <div class="gap-track"><div class="gap-fill fill-green" style="width:65%"></div></div>
+        </div>
+        <div class="gap-row">
+          <div class="gap-meta"><span class="gap-name">Product & UX</span><span class="gap-num warn">5</span></div>
+          <div class="gap-track"><div class="gap-fill fill-amber" style="width:40%"></div></div>
+        </div>
+        <div class="gap-row">
+          <div class="gap-meta"><span class="gap-name">Finance & modeling</span><span class="gap-num warn">4</span></div>
+          <div class="gap-track"><div class="gap-fill fill-amber" style="width:32%"></div></div>
+        </div>
+        <div class="gap-row">
+          <div class="gap-meta"><span class="gap-name">Hiring & people</span><span class="gap-num bad">2 ⚠</span></div>
+          <div class="gap-track"><div class="gap-fill fill-red" style="width:16%"></div></div>
+        </div>
+        <div class="gap-row">
+          <div class="gap-meta"><span class="gap-name">Legal & compliance</span><span class="gap-num bad">1 ⚠</span></div>
+          <div class="gap-track"><div class="gap-fill fill-red" style="width:8%"></div></div>
+        </div>
+      </div>
+
+      <div class="gap-col">
+        <h4>By geography</h4>
+        <div class="gap-row">
+          <div class="gap-meta"><span class="gap-name">Singapore</span><span class="gap-num good">12</span></div>
+          <div class="gap-track"><div class="gap-fill fill-green" style="width:80%"></div></div>
+        </div>
+        <div class="gap-row">
+          <div class="gap-meta"><span class="gap-name">Indonesia</span><span class="gap-num good">7</span></div>
+          <div class="gap-track"><div class="gap-fill fill-green" style="width:47%"></div></div>
+        </div>
+        <div class="gap-row">
+          <div class="gap-meta"><span class="gap-name">Bangladesh</span><span class="gap-num warn">4</span></div>
+          <div class="gap-track"><div class="gap-fill fill-amber" style="width:27%"></div></div>
+        </div>
+        <div class="gap-row">
+          <div class="gap-meta"><span class="gap-name">Vietnam</span><span class="gap-num bad">2 ⚠</span></div>
+          <div class="gap-track"><div class="gap-fill fill-red" style="width:13%"></div></div>
+        </div>
+        <div class="gap-row">
+          <div class="gap-meta"><span class="gap-name">Philippines</span><span class="gap-num bad">2 ⚠</span></div>
+          <div class="gap-track"><div class="gap-fill fill-red" style="width:13%"></div></div>
+        </div>
+      </div>
+
+      <div class="gap-col">
+        <h4>By startup stage</h4>
+        <div class="gap-row">
+          <div class="gap-meta"><span class="gap-name">Pre-seed</span><span class="gap-num good">8</span></div>
+          <div class="gap-track"><div class="gap-fill fill-green" style="width:55%"></div></div>
+        </div>
+        <div class="gap-row">
+          <div class="gap-meta"><span class="gap-name">Seed</span><span class="gap-num good">9</span></div>
+          <div class="gap-track"><div class="gap-fill fill-green" style="width:60%"></div></div>
+        </div>
+        <div class="gap-row">
+          <div class="gap-meta"><span class="gap-name">Series A+</span><span class="gap-num warn">3</span></div>
+          <div class="gap-track"><div class="gap-fill fill-amber" style="width:20%"></div></div>
+        </div>
+        <div style="margin-top:28px; padding-top: 20px; border-top: 1px solid var(--border)">
+          <div style="font-size:12px;color:var(--ink3);line-height:1.6">Note: These figures reflect current enriched data. Full picture emerges after mentor form responses are collected.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="recruit-box">
+      <div class="recruit-item">
+        <div class="recruit-num">2–3</div>
+        <div class="recruit-label">Operators with hiring & people-ops experience at seed stage</div>
+      </div>
+      <div class="recruit-item">
+        <div class="recruit-num">1–2</div>
+        <div class="recruit-label">Legal / regulatory specialists in SEA, particularly fintech</div>
+      </div>
+      <div class="recruit-item">
+        <div class="recruit-num">2</div>
+        <div class="recruit-label">Mentors with strong Vietnam or Philippines market experience</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>Accelerating Asia</strong> · Mentor Intelligence Platform · 2026</p>
+  <p style="font-size:12px;color:var(--ink3)">Built on enriched mentor data · Powered by Claude API · Updated in real time</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 60);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Stagger children of observed groups
+  document.querySelectorAll('.problem-grid, .data-strip, .results-panel').forEach(parent => {
+    [...parent.children].forEach((child, i) => {
+      child.style.transitionDelay = `${i * 80}ms`;
+    });
+  });
+
+  // Match button demo
+  const matches = {
+    'Indonesia': [
+      { initials:'BT', av:'av-a', name:'Bithin Talukdar', role:'BD · Revenue Management · SEA', score:94, sc:'score-a', reason:'Deep experience in SEA procurement cycles and enterprise B2B close in Indonesia. Direct communicator, high value for this stage.', tags:['B2B sales','Indonesia','Revenue management','Seed stage'], best:true, contact:'WhatsApp preferred', cap:'1–2 intros/month', avail:'1 slot open', ac:'green' },
+      { initials:'JS', av:'av-b', name:'Jeshua Soh', role:'VC · SEA markets · Remote teams', score:78, sc:'score-b', reason:'VC background gives strong read on what enterprise buyers care about. Exceptional SEA instincts and connector value.', tags:['VC perspective','SEA markets','B2B','Connector style'], best:false, contact:'LinkedIn preferred', cap:'3–5 intros/month', avail:'Available', ac:'green' },
+      { initials:'SA', av:'av-c', name:'Sion Abednego', role:'Finance & management · Revenue streams', score:61, sc:'score-c', reason:'Can help unpack whether the procurement stall is a pricing, value, or stakeholder problem. Strong analytical approach.', tags:['Pricing','Revenue model','Analytical style'], best:false, contact:'Email preferred', cap:'1–2 intros/month', avail:'At capacity', ac:'amber' }
+    ],
+    'Singapore': [
+      { initials:'AC', av:'av-a', name:'Andy Choi', role:'Product · B2B Sales · IMDA', score:88, sc:'score-a', reason:'Deep 0-to-1 product experience and B2B SaaS sales in Singapore market. Well-networked in the SG ecosystem.', tags:['Product','B2B sales','Singapore','0-to-1'], best:true, contact:'Email preferred', cap:'3–5 intros/month', avail:'Available', ac:'green' },
+      { initials:'AS', av:'av-b', name:'Alex Smith', role:'Operations · HR · SaaS', score:72, sc:'score-b', reason:'Strong ops and HR background across Singapore and SEA, good for founders scaling their first team.', tags:['Operations','Singapore','HR','SaaS'], best:false, contact:'Email preferred', cap:'1–2 intros/month', avail:'Available', ac:'green' },
+      { initials:'TU', av:'av-c', name:'Toyo Ushioda', role:'Finance · Fundraising · Angel investor', score:58, sc:'score-c', reason:'Angel investor in 5+ startups, LP in two VC funds. Good for financial modeling and fundraising prep.', tags:['Fundraising','Finance','Angel investor'], best:false, contact:'Email preferred', cap:'1–2 intros/month', avail:'Available', ac:'green' }
+    ]
+  };
+
+  function findMatches() {
+    const geo = document.getElementById('geo').value;
+    const data = matches[geo] || matches['Indonesia'];
+    const panel = document.getElementById('results');
+    panel.style.opacity = '0';
+    panel.style.transform = 'translateY(8px)';
+    panel.style.transition = 'opacity .3s, transform .3s';
+    setTimeout(() => {
+      panel.innerHTML = data.map(m => `
+        <div class="mentor-card ${m.best ? 'best' : ''}" style="opacity:0;transform:translateY(10px);transition:all .4s">
+          ${m.best ? '<div class="best-badge">Best match</div>' : ''}
+          <div class="mentor-top">
+            <div class="avatar ${m.av}">${m.initials}</div>
+            <div><div class="mentor-name">${m.name}</div><div class="mentor-role">${m.role}</div></div>
+            <div class="match-score ${m.sc}">${m.score}</div>
+          </div>
+          <div class="mentor-reason">${m.reason}</div>
+          <div class="tag-row">${m.tags.map((t,i) => `<span class="tag ${i<2?'hi':''}">${t}</span>`).join('')}</div>
+          <div class="mentor-foot">
+            <span>${m.contact}</span><span>${m.cap}</span>
+            <span style="color:var(--${m.ac})">${m.avail}</span>
+          </div>
+        </div>
+      `).join('');
+      panel.style.opacity = '1';
+      panel.style.transform = 'translateY(0)';
+      [...panel.children].forEach((c,i) => {
+        setTimeout(() => { c.style.opacity='1'; c.style.transform='translateY(0)'; }, i*120);
+      });
+    }, 250);
+  }
+</script>
+</body>
+</html>
